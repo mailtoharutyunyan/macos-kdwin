@@ -9,7 +9,9 @@ mkdir -p "$DEST"
 cp layouts/*.keylayout layouts/*.icns "$DEST/"
 echo "Copied keyboards to $DEST"
 
-if ! command -v swift >/dev/null; then
+# On a Mac without the Xcode command line tools, /usr/bin/swift is only a stub
+# that pops up an installer, so check for the tools themselves.
+if ! xcode-select -p >/dev/null 2>&1 || ! command -v swift >/dev/null; then
     echo
     echo "Swift is not available, so turn the keyboards on by hand:"
     echo "  log out and back in, then System Settings → Keyboard → Input Sources → Edit → +"
@@ -22,5 +24,5 @@ if swift tools/keyboards.swift enable 2>/dev/null; then
     echo "Done. Switch keyboards with Ctrl+Space or the flag in the menu bar."
 else
     echo
-    echo "macOS loads new keyboards at login. Log out, log back in, then run ./install.sh again."
+    echo "macOS loads new keyboards at login. Log out, log back in, then run the installer again."
 fi
