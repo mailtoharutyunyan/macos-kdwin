@@ -1,6 +1,7 @@
 # KDWin Keyboards for macOS
 
-KDWin-style phonetic keyboards for Mac: **Armenian KDWin** 🇦🇲 and **Russian KDWin** 🇷🇺.
+KDWin-style phonetic keyboards for Mac: **Armenian KDWin** 🇦🇲 and **Russian KDWin** 🇷🇺,
+plus **English US** 🇺🇸 — the standard US layout with a US flag, to use instead of Apple's "ABC".
 
 ## Install
 
@@ -13,7 +14,8 @@ curl -fsSL https://raw.githubusercontent.com/mailtoharutyunyan/KDWin-Keyboards/m
 macOS only loads new keyboards at login. If the installer says so, log out, log
 back in, and run the same command again to turn them on.
 
-Switch keyboards with **Ctrl+Space** or the flag in the menu bar.
+Switch keyboards with **Ctrl+Space** or the flag in the menu bar. To have only flags
+in the menu, remove "ABC" in System Settings → Keyboard → Input Sources → Edit.
 
 Or from a clone: `git clone https://github.com/mailtoharutyunyan/KDWin-Keyboards && cd KDWin-Keyboards && ./install.sh`
 

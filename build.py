@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Builds KDWin-style Armenian and Russian phonetic keyboard layouts for macOS.
+"""Builds KDWin-style Armenian and Russian phonetic keyboard layouts, plus a US
+English layout with a US flag, for macOS.
 
 Output: layouts/*.keylayout + flag *.icns (installed by install.sh).
 Option (⌥) and Command (⌘) layers type plain US English, so shortcuts and
@@ -208,8 +209,23 @@ def keylayout(name, layout_id, native):
 </keyboard>
 """
 
-def png(size, stripes):
-    """Square PNG: a 3:2 horizontal-stripe flag with a thin border, centred on transparency."""
+def stripes(*colours):
+    """Flag of equal horizontal stripes, top to bottom."""
+    return lambda fx, fy: colours[min(int(fy * len(colours)), len(colours) - 1)]
+
+def us_flag(fx, fy):
+    red, white, blue = (178, 34, 52), (255, 255, 255), (60, 59, 110)
+    if fx < 0.4 and fy < 7 / 13:
+        # 50 stars: 9 rows alternating 6 and 5, on an 11 x 9 grid.
+        cx, cy = fx / 0.4 * 12, fy / (7 / 13) * 10
+        col, row = round(cx), round(cy)
+        on_grid = 1 <= row <= 9 and 1 <= col <= 11 and (col + row) % 2 == 0
+        return white if on_grid and (cx - col) ** 2 + (cy - row) ** 2 < 0.2 else blue
+    return red if int(fy * 13) % 2 == 0 else white
+
+def png(size, flag):
+    """Square PNG: a 3:2 flag with a thin border, centred on transparency.
+    Each pixel is the average of 4x4 samples so small icons stay smooth."""
     height = size * 2 // 3
     top = (size - height) // 2
     rows = b""
@@ -222,26 +238,29 @@ def png(size, stripes):
             elif x == 0 or fy == 0 or x == size - 1 or fy == height - 1:
                 row += bytes((90, 90, 90, 255))
             else:
-                row += bytes(stripes[min(fy * len(stripes) // height, len(stripes) - 1)]) + b"\xff"
+                samples = [flag((x + (i + 0.5) / 4) / size, (fy + (j + 0.5) / 4) / height)
+                           for i in range(4) for j in range(4)]
+                row += bytes(sum(c[k] for c in samples) // 16 for k in range(3)) + b"\xff"
         rows += row
     chunk = lambda t, d: struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d))
     return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
             + chunk(b"IDAT", zlib.compress(rows)) + chunk(b"IEND", b""))
 
-def flag_icns(path, stripes):
+def flag_icns(path, flag):
     with tempfile.TemporaryDirectory() as tmp:
         iconset = os.path.join(tmp, "flag.iconset")
         os.mkdir(iconset)
         for size in (16, 32, 128, 256, 512):
             for scale in (1, 2):
                 name = f"icon_{size}x{size}{'@2x' if scale == 2 else ''}.png"
-                open(os.path.join(iconset, name), "wb").write(png(size * scale, stripes))
+                open(os.path.join(iconset, name), "wb").write(png(size * scale, flag))
         subprocess.run(["iconutil", "-c", "icns", iconset, "-o", path], check=True)
 
 LAYOUTS = [
-    # name, id, map, language, flag stripes (top to bottom)
-    ("Armenian KDWin", -23401, ARMENIAN, "hy", [(217, 0, 18), (0, 51, 160), (242, 168, 0)]),
-    ("Russian KDWin", -23402, RUSSIAN, "ru", [(255, 255, 255), (0, 57, 166), (213, 43, 30)]),
+    # name, id, map, language, flag
+    ("Armenian KDWin", -23401, ARMENIAN, "hy", stripes((217, 0, 18), (0, 51, 160), (242, 168, 0))),
+    ("Russian KDWin", -23402, RUSSIAN, "ru", stripes((255, 255, 255), (0, 57, 166), (213, 43, 30))),
+    ("English US", -23403, {}, "en", us_flag),
 ]
 
 def main():
@@ -249,9 +268,9 @@ def main():
     os.makedirs(OUT)
     # Loose .keylayout files (not a .bundle): macOS picks these up reliably, and
     # the .icns with the same name becomes the menu-bar flag.
-    for name, layout_id, native, lang, stripes in LAYOUTS:
+    for name, layout_id, native, lang, flag in LAYOUTS:
         open(os.path.join(OUT, f"{name}.keylayout"), "w", encoding="utf-8").write(keylayout(name, layout_id, native))
-        flag_icns(os.path.join(OUT, f"{name}.icns"), stripes)
+        flag_icns(os.path.join(OUT, f"{name}.icns"), flag)
     print("Built", OUT)
 
 if __name__ == "__main__":

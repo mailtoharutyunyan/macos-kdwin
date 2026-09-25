@@ -1,9 +1,9 @@
-// Turns the KDWin input sources on or off, or reports their status.
+// Turns the KDWin (and English US) input sources on or off, or reports their status.
 // Usage: swift tools/keyboards.swift enable|disable|status
 import Carbon
 import Foundation
 
-let ids = ["org.unknown.keylayout.ArmenianKDWin", "org.unknown.keylayout.RussianKDWin"]
+let ids = ["org.unknown.keylayout.EnglishUS", "org.unknown.keylayout.ArmenianKDWin", "org.unknown.keylayout.RussianKDWin"]
 
 func sid(_ s: TISInputSource) -> String {
     Unmanaged<CFString>.fromOpaque(TISGetInputSourceProperty(s, kTISPropertyInputSourceID)).takeUnretainedValue() as String
