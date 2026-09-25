@@ -4,16 +4,18 @@ KDWin-style phonetic keyboards for Mac: **Armenian KDWin** 🇦🇲 and **Russia
 
 ## Install
 
+Open Terminal and run:
+
 ```sh
-git clone <this repo> KDWin-Keyboards
-cd KDWin-Keyboards
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/KDWin-Keyboards/main/get.sh | bash
 ```
 
-On a new Mac, macOS only loads new keyboards at login. If the installer says so,
-log out, log back in, and run `./install.sh` again to turn them on.
+macOS only loads new keyboards at login. If the installer says so, log out, log
+back in, and run the same command again to turn them on.
 
 Switch keyboards with **Ctrl+Space** or the flag in the menu bar.
+
+Or from a clone: `git clone https://github.com/GITHUB_USER/KDWin-Keyboards && cd KDWin-Keyboards && ./install.sh`
 
 ## Layouts
 
@@ -54,8 +56,10 @@ Log out and back in for the change to take effect.
 ## Uninstall
 
 ```sh
-./uninstall.sh
+~/Library/Application\ Support/KDWin-Keyboards/uninstall.sh
 ```
+
+(or `./uninstall.sh` from a clone)
 
 ## About the "developer can access anything you type" warning
 
