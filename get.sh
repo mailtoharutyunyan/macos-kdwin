@@ -1,11 +1,11 @@
 #!/bin/bash
 # One-line installer:
-#   curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/KDWin-Keyboards/main/get.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/mailtoharutyunyan/KDWin-Keyboards/main/get.sh | bash
 # Downloads the latest version from GitHub and runs install.sh. Run it again
 # after logging out and back in to turn the keyboards on.
 set -euo pipefail
 
-REPO="GITHUB_USER/KDWin-Keyboards"
+REPO="mailtoharutyunyan/KDWin-Keyboards"
 BRANCH="main"
 DIR="$HOME/Library/Application Support/KDWin-Keyboards"
 
