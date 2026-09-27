@@ -8,7 +8,7 @@ plus **English US** 🇺🇸 — the standard US layout with a US flag, to use i
 Open Terminal and run:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/mailtoharutyunyan/KDWin-Keyboards/main/get.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mailtoharutyunyan/macos-kdwin/main/get.sh | bash
 ```
 
 macOS only loads new keyboards at login. If the installer says so, log out, log
@@ -17,7 +17,7 @@ back in, and run the same command again to turn them on.
 Switch keyboards with **Ctrl+Space** or the flag in the menu bar. To have only flags
 in the menu, remove "ABC" in System Settings → Keyboard → Input Sources → Edit.
 
-Or from a clone: `git clone https://github.com/mailtoharutyunyan/KDWin-Keyboards && cd KDWin-Keyboards && ./install.sh`
+Or from a clone: `git clone https://github.com/mailtoharutyunyan/macos-kdwin && cd macos-kdwin && ./install.sh`
 
 ## Layouts
 
